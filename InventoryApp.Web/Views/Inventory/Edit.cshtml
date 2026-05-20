@@ -1,0 +1,108 @@
+@model InventoryApp.Web.Models.InventoryViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Edit Inventory</h2>
+    <span id="saveStatus" class="text-muted small"></span>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post" id="editForm">
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="RowVersion" type="hidden" id="rowVersion" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" id="titleField" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3" id="descriptionField"></textarea>
+            </div>
+            <div class="mb-3">
+                <label asp-for="CategoryId" class="form-label"></label>
+                <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select" id="categoryField">
+                    <option value="">-- Select Category --</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label"></label>
+                <input asp-for="ImageUrl" class="form-control" id="imageUrlField" />
+            </div>
+            <div class="mb-3 form-check">
+                <input asp-for="IsPublic" class="form-check-input" id="isPublicField" />
+                <label asp-for="IsPublic" class="form-check-label"></label>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var inventoryId = @Model.Id;
+    var hasChanges = false;
+    var isSaving = false;
+
+    var fields = ['titleField', 'descriptionField', 'categoryField', 'imageUrlField', 'isPublicField'];
+
+    fields.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', function() { hasChanges = true; });
+            el.addEventListener('change', function() { hasChanges = true; });
+        }
+    });
+
+    function setStatus(msg, color) {
+        var el = document.getElementById('saveStatus');
+        el.textContent = msg;
+        el.style.color = color;
+    }
+
+    async function autoSave() {
+        if (!hasChanges || isSaving) return;
+
+        isSaving = true;
+        hasChanges = false;
+        setStatus('Saving...', '#f59e0b');
+
+        var data = {
+            Id: inventoryId,
+            Title: document.getElementById('titleField').value,
+            Description: document.getElementById('descriptionField').value,
+            CategoryId: document.getElementById('categoryField').value,
+            ImageUrl: document.getElementById('imageUrlField').value,
+            IsPublic: document.getElementById('isPublicField').checked,
+            RowVersion: parseInt(document.getElementById('rowVersion').value)
+        };
+
+        try {
+            var response = await fetch('/Inventory/AutoSave', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            var result = await response.json();
+
+            if (result.success) {
+                document.getElementById('rowVersion').value = result.rowVersion;
+                setStatus('All changes saved', '#22c55e');
+            } else {
+                setStatus(result.error, '#ef4444');
+                hasChanges = true;
+            }
+        } catch {
+            setStatus('Save failed', '#ef4444');
+            hasChanges = true;
+        }
+
+        isSaving = false;
+    }
+
+    setInterval(autoSave, 8000);
+</script>
+}

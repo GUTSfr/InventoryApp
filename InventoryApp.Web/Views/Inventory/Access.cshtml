@@ -1,0 +1,70 @@
+@model InventoryApp.Web.Models.AccessViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Access — @Model.InventoryTitle</h2>
+    <a asp-action="Details" asp-route-id="@Model.InventoryId" class="btn btn-secondary">Back</a>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="mb-4">
+    <form asp-action="TogglePublic" method="post" style="display:inline">
+        <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+        <button type="submit" class="btn @(Model.IsPublic ? "btn-warning" : "btn-success")">
+            @(Model.IsPublic ? "Make Private" : "Make Public")
+        </button>
+    </form>
+    <span class="ms-2 text-muted">Currently: @(Model.IsPublic ? "Public" : "Private")</span>
+</div>
+
+<h4>Users with Access</h4>
+
+<style>
+    .action-buttons { display: none; }
+    tr:hover .action-buttons { display: inline-flex; gap: 4px; }
+</style>
+
+<table class="table table-hover mb-4">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.UsersWithAccess)
+        {
+            <tr>
+                <td>@user.DisplayName</td>
+                <td>@user.Email</td>
+                <td>
+                    <div class="action-buttons">
+                        <form asp-action="RemoveAccess" method="post">
+                            <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Add User</h4>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddAccess" method="post">
+            <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input name="email" class="form-control" placeholder="user@example.com" />
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+</div>

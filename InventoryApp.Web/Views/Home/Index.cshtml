@@ -1,0 +1,63 @@
+﻿<div class="row">
+    <div class="col-md-8">
+        <h4>Latest Inventories</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Owner</th>
+                    <th>Items</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.LatestInventories)
+                {
+                    <tr onclick="window.location='@Url.Action("Details", "Inventory", new { id = item.Id })'" style="cursor:pointer">
+                        <td>@item.Title</td>
+                        <td>@item.CategoryName</td>
+                        <td>@item.OwnerName</td>
+                        <td>@item.ItemCount</td>
+                        <td>@item.CreatedAt.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h4 class="mt-4">Top 5 Popular Inventories</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Owner</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.PopularInventories)
+                {
+                    <tr onclick="window.location='@Url.Action("Details", "Inventory", new { id = item.Id })'" style="cursor:pointer">
+                        <td>@item.Title</td>
+                        <td>@item.CategoryName</td>
+                        <td>@item.OwnerName</td>
+                        <td>@item.ItemCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <h4>Tags</h4>
+        <div class="d-flex flex-wrap gap-2">
+            @foreach (var tag in ViewBag.Tags)
+            {
+                <a asp-controller="Search" asp-action="Index" asp-route-query="@tag.Name" class="badge bg-secondary text-decoration-none">
+                    @tag.Name (@tag.Count)
+                </a>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+@model InventoryApp.Web.Models.ItemViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Item: @Model.CustomId</h2>
+    <div>
+        @if (User.Identity!.IsAuthenticated)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            <form asp-action="Delete" method="post" style="display:inline">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+        }
+        <a asp-controller="Inventory" asp-action="Details" asp-route-id="@Model.InventoryId" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <tr>
+                <th>Custom ID</th>
+                <td>@Model.CustomId</td>
+            </tr>
+            <tr>
+                <th>Created By</th>
+                <td>@Model.CreatedByName</td>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                <td>@Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
+            </tr>
+            @foreach (var field in Model.Fields)
+            {
+                <tr>
+                    <th>@field.Title</th>
+                    <td>
+                        @{
+                            var value = field.SlotName switch
+                            {
+                                "SingleLineText1" => Model.String1,
+                                "SingleLineText2" => Model.String2,
+                                "SingleLineText3" => Model.String3,
+                                "MultiLineText1" => Model.Text1,
+                                "MultiLineText2" => Model.Text2,
+                                "MultiLineText3" => Model.Text3,
+                                "Numeric1" => Model.Number1?.ToString(),
+                                "Numeric2" => Model.Number2?.ToString(),
+                                "Numeric3" => Model.Number3?.ToString(),
+                                "Boolean1" => Model.Bool1?.ToString(),
+                                "Boolean2" => Model.Bool2?.ToString(),
+                                "Boolean3" => Model.Bool3?.ToString(),
+                                "Link1" => Model.Link1,
+                                "Link2" => Model.Link2,
+                                "Link3" => Model.Link3,
+                                _ => null
+                            };
+                        }
+                        @value
+                    </td>
+                </tr>
+            }
+            <tr>
+                <th>Likes</th>
+                <td>
+                    @Model.LikesCount
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <form asp-controller="Like" asp-action="Toggle" method="post" style="display:inline">
+                            <input type="hidden" name="itemId" value="@Model.Id" />
+                            <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+                            <button type="submit" class="btn btn-sm @(Model.UserHasLiked ? "btn-danger" : "btn-outline-danger")">
+                                @(Model.UserHasLiked ? "Unlike" : "Like")
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

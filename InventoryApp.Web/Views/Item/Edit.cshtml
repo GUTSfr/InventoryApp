@@ -1,0 +1,56 @@
+@model InventoryApp.Web.Models.ItemViewModel
+
+<h2>Edit Item: @Model.CustomId</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="InventoryId" type="hidden" />
+            <input asp-for="RowVersion" type="hidden" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Custom ID</label>
+                <input asp-for="CustomId" class="form-control" />
+            </div>
+
+            @foreach (var field in Model.Fields)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@field.Title</label>
+                    @if (field.Type == "SingleLineText" || field.Type == "Link")
+                    {
+                        <input name="@field.SlotName" class="form-control" title="@field.Description"
+                               value="@(field.SlotName == "SingleLineText1" ? Model.String1 :
+                                        field.SlotName == "SingleLineText2" ? Model.String2 :
+                                        field.SlotName == "SingleLineText3" ? Model.String3 :
+                                        field.SlotName == "Link1" ? Model.Link1 :
+                                        field.SlotName == "Link2" ? Model.Link2 : Model.Link3)" />
+                    }
+                    else if (field.Type == "MultiLineText")
+                    {
+                        <textarea name="@field.SlotName" class="form-control" rows="3" title="@field.Description">@(
+                            field.SlotName == "MultiLineText1" ? Model.Text1 :
+                            field.SlotName == "MultiLineText2" ? Model.Text2 : Model.Text3)</textarea>
+                    }
+                    else if (field.Type == "Numeric")
+                    {
+                        <input name="@field.SlotName" type="number" step="any" class="form-control"
+                               value="@(field.SlotName == "Numeric1" ? Model.Number1 :
+                                        field.SlotName == "Numeric2" ? Model.Number2 : Model.Number3)" />
+                    }
+                    else if (field.Type == "Boolean")
+                    {
+                        <input name="@field.SlotName" type="checkbox" class="form-check-input"
+                               checked="@(field.SlotName == "Boolean1" ? Model.Bool1 :
+                                          field.SlotName == "Boolean2" ? Model.Bool2 : Model.Bool3)" />
+                    }
+                </div>
+            }
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

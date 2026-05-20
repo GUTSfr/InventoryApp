@@ -1,0 +1,52 @@
+<h2>My Profile</h2>
+<p class="text-muted">@User.Identity!.Name</p>
+
+<h4 class="mt-4">My Inventories</h4>
+<a asp-controller="Inventory" asp-action="Create" class="btn btn-primary btn-sm mb-3">Create New</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Items</th>
+            <th>Public</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.OwnedInventories)
+        {
+            <tr onclick="window.location='@Url.Action("Details", "Inventory", new { id = item.Id })'" style="cursor:pointer">
+                <td>@item.Title</td>
+                <td>@item.CategoryName</td>
+                <td>@item.ItemCount</td>
+                <td>@(item.IsPublic ? "Yes" : "No")</td>
+                <td>@item.CreatedAt.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4 class="mt-4">Inventories I Have Access To</h4>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Items</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.AccessInventories)
+        {
+            <tr onclick="window.location='@Url.Action("Details", "Inventory", new { id = item.Id })'" style="cursor:pointer">
+                <td>@item.Title</td>
+                <td>@item.CategoryName</td>
+                <td>@item.ItemCount</td>
+                <td>@item.CreatedAt.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

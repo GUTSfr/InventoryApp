@@ -1,0 +1,41 @@
+@model InventoryApp.Web.Models.SearchViewModel
+
+<h2>Search Results for "@Model.Query"</h2>
+
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="input-group">
+        <input name="query" value="@Model.Query" class="form-control" placeholder="Search inventories..." />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+@if (Model.Inventories.Count == 0)
+{
+    <p class="text-muted">No results found.</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Owner</th>
+                <th>Items</th>
+                <th>Tags</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Inventories)
+            {
+                <tr onclick="window.location='@Url.Action("Details", "Inventory", new { id = item.Id })'" style="cursor:pointer">
+                    <td>@item.Title</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.OwnerName</td>
+                    <td>@item.ItemCount</td>
+                    <td>@string.Join(", ", item.Tags)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

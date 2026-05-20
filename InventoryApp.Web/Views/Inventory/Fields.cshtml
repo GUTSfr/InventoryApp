@@ -1,0 +1,82 @@
+@model List<InventoryApp.Web.Models.InventoryFieldViewModel>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Fields — @ViewBag.InventoryTitle</h2>
+    <a asp-action="Details" asp-route-id="@ViewBag.InventoryId" class="btn btn-secondary">Back</a>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<style>
+    .action-buttons { display: none; }
+    tr:hover .action-buttons { display: inline-flex; gap: 4px; }
+</style>
+
+<table class="table table-hover mb-4">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Slot</th>
+            <th>Show in table</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var field in Model)
+        {
+            <tr>
+                <td>@field.Title</td>
+                <td>@field.Type</td>
+                <td>@field.SlotIndex</td>
+                <td>@(field.ShowInTable ? "Yes" : "No")</td>
+                <td>@field.Description</td>
+                <td>
+                    <div class="action-buttons">
+                        <form asp-action="DeleteField" method="post">
+                            <input type="hidden" name="fieldId" value="@field.Id" />
+                            <input type="hidden" name="inventoryId" value="@field.InventoryId" />
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Add Field</h4>
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="AddField" method="post">
+            <input type="hidden" name="InventoryId" value="@ViewBag.InventoryId" />
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input name="Title" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <input name="Description" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select name="Type" class="form-select">
+                    <option value="1">Single Line Text</option>
+                    <option value="2">Multi Line Text</option>
+                    <option value="3">Numeric</option>
+                    <option value="4">Link</option>
+                    <option value="5">Boolean</option>
+                </select>
+            </div>
+            <div class="mb-3 form-check">
+                <input name="ShowInTable" type="checkbox" value="true" class="form-check-input" />
+                <label class="form-check-label">Show in table</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Field</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+
+@model InventoryApp.Web.Models.CustomIdViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Custom ID — @Model.InventoryTitle</h2>
+    <a asp-action="Details" asp-route-id="@Model.InventoryId" class="btn btn-secondary">Back</a>
+</div>
+
+<div class="alert alert-info">
+    <strong>Preview:</strong> @Model.Preview
+</div>
+
+<style>
+    .action-buttons { display: none; }
+    tr:hover .action-buttons { display: inline-flex; gap: 4px; }
+</style>
+
+<table class="table table-hover mb-4">
+    <thead>
+        <tr>
+            <th>Order</th>
+            <th>Type</th>
+            <th>Value/Pattern</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var element in Model.Elements)
+        {
+            <tr>
+                <td>@element.SortOrder</td>
+                <td>@element.Type</td>
+                <td>@(element.FixedValue ?? element.FormatPattern)</td>
+                <td>
+                    <div class="action-buttons">
+                        <form asp-action="DeleteIdElement" method="post">
+                            <input type="hidden" name="elementId" value="@element.Id" />
+                            <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Add Element</h4>
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="AddIdElement" method="post">
+            <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+            <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select name="type" id="elementType" class="form-select" onchange="updateFields()">
+                    <option value="1">Fixed Text</option>
+                    <option value="2">20-bit Random</option>
+                    <option value="3">32-bit Random</option>
+                    <option value="4">6-digit Random</option>
+                    <option value="5">9-digit Random</option>
+                    <option value="6">GUID</option>
+                    <option value="7">Date/Time</option>
+                    <option value="8">Sequence</option>
+                </select>
+            </div>
+            <div class="mb-3" id="fixedValueField">
+                <label class="form-label">Fixed Text</label>
+                <input name="fixedValue" class="form-control" placeholder="e.g. ITEM-" />
+            </div>
+            <div class="mb-3" id="formatPatternField" style="display:none">
+                <label class="form-label">Format Pattern</label>
+                <input name="formatPattern" class="form-control" placeholder="e.g. yyyy for date, D3 for sequence" />
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateFields() {
+            var type = document.getElementById('elementType').value;
+            var fixedField = document.getElementById('fixedValueField');
+            var formatField = document.getElementById('formatPatternField');
+
+            if (type === '1') {
+                fixedField.style.display = 'block';
+                formatField.style.display = 'none';
+            } else if (type === '7' || type === '8') {
+                fixedField.style.display = 'none';
+                formatField.style.display = 'block';
+            } else {
+                fixedField.style.display = 'none';
+                formatField.style.display = 'none';
+            }
+        }
+    </script>
+}

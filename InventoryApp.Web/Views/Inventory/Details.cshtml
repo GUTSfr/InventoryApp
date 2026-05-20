@@ -1,0 +1,165 @@
+@model InventoryApp.Web.Models.InventoryViewModel
+
+<div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+    <h2>@Model.Title</h2>
+    <div class="d-flex flex-wrap gap-2">
+        @if (User.Identity!.IsAuthenticated)
+        {
+            <a asp-controller="Item" asp-action="Create" asp-route-inventoryId="@Model.Id" class="btn btn-primary">Add Item</a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            <a asp-action="Fields" asp-route-id="@Model.Id" class="btn btn-warning">Fields</a>
+            <a asp-action="Access" asp-route-id="@Model.Id" class="btn btn-info">Access</a>
+            <a asp-action="Statistics" asp-route-id="@Model.Id" class="btn btn-secondary">Stats</a>
+            <a asp-action="CustomId" asp-route-id="@Model.Id" class="btn btn-dark">Custom ID</a>
+            <form asp-action="Delete" method="post" style="display:inline">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <table class="table">
+            <tr>
+                <th>Owner</th>
+                <td>@Model.OwnerName</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>@Model.Description</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>@Model.CategoryName</td>
+            </tr>
+            <tr>
+                <th>Public</th>
+                <td>@(Model.IsPublic ? "Yes" : "No")</td>
+            </tr>
+            <tr>
+                <th>Items</th>
+                <td>@Model.ItemCount</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>@Model.CreatedAt.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>
+                    @foreach (var tag in Model.TagsWithId)
+                    {
+                        <span class="badge bg-secondary me-1">@tag.Name
+                            @if (User.Identity!.IsAuthenticated)
+                            {
+                                <form asp-action="RemoveTag" method="post" style="display:inline">
+                                    <input type="hidden" name="inventoryId" value="@Model.Id" />
+                                    <input type="hidden" name="tagId" value="@tag.Id" />
+                                    <button type="submit" class="btn-close btn-close-white" style="font-size:0.5rem"></button>
+                                </form>
+                            }
+                        </span>
+                    }
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <form asp-action="AddTag" method="post" style="display:inline">
+                            <input type="hidden" name="inventoryId" value="@Model.Id" />
+                            <div style="display:inline-block;position:relative">
+                                <input id="tagInput" name="tagName" class="form-control form-control-sm d-inline w-auto" placeholder="Add tag..." autocomplete="off" />
+                                <div id="tagSuggestions" class="list-group" style="position:absolute;z-index:1000;width:200px;display:none"></div>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<h4>Items</h4>
+<table class="table table-hover mb-4">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Created</th>
+            <th>Created By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr onclick="window.location='@Url.Action("Details", "Item", new { id = item.Id })'" style="cursor:pointer">
+                <td>@item.CustomId</td>
+                <td>@item.CreatedAt.ToShortDateString()</td>
+                <td>@item.CreatedByName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Comments</h4>
+<div class="mb-4">
+    @foreach (var comment in Model.Comments)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <p class="card-text">@comment.Content</p>
+                <small class="text-muted">@comment.AuthorName — @comment.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
+            </div>
+        </div>
+    }
+</div>
+
+@if (User.Identity!.IsAuthenticated)
+{
+    <form asp-controller="Comment" asp-action="Add" method="post">
+        <input type="hidden" name="inventoryId" value="@Model.Id" />
+        <div class="mb-3">
+            <textarea name="content" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+    </form>
+}
+
+@section Scripts {
+    <script>
+        document.getElementById('tagInput')?.addEventListener('input', async function() {
+            var query = this.value;
+            if (query.length < 1) {
+                document.getElementById('tagSuggestions').style.display = 'none';
+                return;
+            }
+            var response = await fetch('/api/tags?query=' + encodeURIComponent(query));
+            var tags = await response.json();
+            var suggestions = document.getElementById('tagSuggestions');
+            suggestions.innerHTML = '';
+            if (tags.length > 0) {
+                tags.forEach(function(tag) {
+                    var item = document.createElement('a');
+                    item.className = 'list-group-item list-group-item-action py-1';
+                    item.textContent = tag;
+                    item.href = '#';
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.getElementById('tagInput').value = tag;
+                        suggestions.style.display = 'none';
+                    });
+                    suggestions.appendChild(item);
+                });
+                suggestions.style.display = 'block';
+            } else {
+                suggestions.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#tagInput')) {
+                document.getElementById('tagSuggestions').style.display = 'none';
+            }
+        });
+    </script>
+}

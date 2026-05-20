@@ -1,0 +1,69 @@
+@model List<InventoryApp.Web.Models.UserViewModel>
+
+<h2>User Management</h2>
+
+<style>
+    .action-buttons { display: none; }
+    tr:hover .action-buttons { display: inline-flex; gap: 4px; }
+</style>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Blocked</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.DisplayName</td>
+                <td>@user.Email</td>
+                <td>@(user.IsAdmin ? "Yes" : "No")</td>
+                <td>@(user.IsBlocked ? "Yes" : "No")</td>
+                <td>@user.CreatedAt.ToShortDateString()</td>
+                <td>
+                    <div class="action-buttons">
+                        @if (user.IsBlocked)
+                        {
+                            <form asp-action="Unblock" method="post">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Unblock</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="Block" method="post">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-sm btn-warning">Block</button>
+                            </form>
+                        }
+                        @if (user.IsAdmin)
+                        {
+                            <form asp-action="RemoveAdmin" method="post">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-sm btn-secondary">Remove Admin</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="MakeAdmin" method="post">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-sm btn-primary">Make Admin</button>
+                            </form>
+                        }
+                        <form asp-action="Delete" method="post">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
