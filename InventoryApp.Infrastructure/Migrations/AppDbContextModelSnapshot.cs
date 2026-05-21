@@ -17,7 +17,6 @@ namespace InventoryApp.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "10.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -98,7 +97,7 @@ namespace InventoryApp.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", "public");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.Category", b =>
@@ -115,7 +114,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", "public");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.Comment", b =>
@@ -146,7 +145,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("InventoryId");
 
-                    b.ToTable("Comments", "public");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.CustomIdElement", b =>
@@ -176,7 +175,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("CustomIdFormatId");
 
-                    b.ToTable("CustomIdElements", "public");
+                    b.ToTable("CustomIdElements", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.CustomIdFormat", b =>
@@ -195,7 +194,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     b.HasIndex("InventoryId")
                         .IsUnique();
 
-                    b.ToTable("CustomIdFormats", "public");
+                    b.ToTable("CustomIdFormats", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.Inventory", b =>
@@ -241,7 +240,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Inventories", "public");
+                    b.ToTable("Inventories", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.InventoryAccess", b =>
@@ -256,7 +255,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("InventoryAccesses", "public");
+                    b.ToTable("InventoryAccesses", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.InventoryField", b =>
@@ -294,7 +293,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     b.HasIndex("InventoryId", "Type", "SlotIndex")
                         .IsUnique();
 
-                    b.ToTable("InventoryFields", "public");
+                    b.ToTable("InventoryFields", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.InventoryTag", b =>
@@ -309,7 +308,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("InventoryTags", "public");
+                    b.ToTable("InventoryTags", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.Item", b =>
@@ -395,7 +394,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     b.HasIndex("InventoryId", "CustomId")
                         .IsUnique();
 
-                    b.ToTable("Items", "public");
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.Like", b =>
@@ -410,7 +409,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes", "public");
+                    b.ToTable("Likes", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.Tag", b =>
@@ -430,7 +429,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tags", "public");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -457,7 +456,7 @@ namespace InventoryApp.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", "public");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -482,7 +481,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", "public");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -507,7 +506,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", "public");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -529,7 +528,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", "public");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -544,7 +543,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", "public");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -563,7 +562,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", "public");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("InventoryApp.Core.Entities.Comment", b =>
