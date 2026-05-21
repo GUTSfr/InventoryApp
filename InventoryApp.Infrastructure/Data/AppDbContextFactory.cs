@@ -8,7 +8,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     public AppDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=InventoryApp;Trusted_Connection=True;MultipleActiveResultSets=true");
+        optionsBuilder.UseNpgsql("Host=localhost;Database=InventoryApp;Username=postgres;Password=postgres");
         return new AppDbContext(optionsBuilder.Options);
     }
 }
