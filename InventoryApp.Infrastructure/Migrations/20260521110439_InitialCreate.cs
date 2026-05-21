@@ -11,8 +11,12 @@ namespace InventoryApp.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "public");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -27,6 +31,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -56,6 +61,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Categories",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -69,6 +75,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Tags",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -82,6 +89,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -96,6 +104,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "public",
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -103,6 +112,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -117,6 +127,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -124,6 +135,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
+                schema: "public",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -137,6 +149,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -144,6 +157,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
+                schema: "public",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -155,12 +169,14 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "public",
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -168,6 +184,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
+                schema: "public",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -181,6 +198,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -188,6 +206,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Inventories",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -208,12 +227,14 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Inventories_AspNetUsers_OwnerId",
                         column: x => x.OwnerId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Inventories_Categories_CategoryId",
                         column: x => x.CategoryId,
+                        principalSchema: "public",
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -221,6 +242,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Comments",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -236,12 +258,14 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Comments_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comments_Inventories_InventoryId",
                         column: x => x.InventoryId,
+                        principalSchema: "public",
                         principalTable: "Inventories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -249,6 +273,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "CustomIdFormats",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -261,6 +286,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_CustomIdFormats_Inventories_InventoryId",
                         column: x => x.InventoryId,
+                        principalSchema: "public",
                         principalTable: "Inventories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -268,6 +294,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "InventoryAccesses",
+                schema: "public",
                 columns: table => new
                 {
                     InventoryId = table.Column<int>(type: "int", nullable: false),
@@ -279,12 +306,14 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_InventoryAccesses_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_InventoryAccesses_Inventories_InventoryId",
                         column: x => x.InventoryId,
+                        principalSchema: "public",
                         principalTable: "Inventories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -292,6 +321,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "InventoryFields",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -310,6 +340,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_InventoryFields_Inventories_InventoryId",
                         column: x => x.InventoryId,
+                        principalSchema: "public",
                         principalTable: "Inventories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -317,6 +348,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "InventoryTags",
+                schema: "public",
                 columns: table => new
                 {
                     InventoryId = table.Column<int>(type: "int", nullable: false),
@@ -328,12 +360,14 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_InventoryTags_Inventories_InventoryId",
                         column: x => x.InventoryId,
+                        principalSchema: "public",
                         principalTable: "Inventories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_InventoryTags_Tags_TagId",
                         column: x => x.TagId,
+                        principalSchema: "public",
                         principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -341,6 +375,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Items",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -357,9 +392,9 @@ namespace InventoryApp.Infrastructure.Migrations
                     Text1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Text2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Text3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Number1 = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Number2 = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Number3 = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Number1 = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    Number2 = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    Number3 = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
                     Bool1 = table.Column<bool>(type: "bit", nullable: true),
                     Bool2 = table.Column<bool>(type: "bit", nullable: true),
                     Bool3 = table.Column<bool>(type: "bit", nullable: true),
@@ -373,12 +408,14 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Items_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Items_Inventories_InventoryId",
                         column: x => x.InventoryId,
+                        principalSchema: "public",
                         principalTable: "Inventories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -386,6 +423,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "CustomIdElements",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -402,6 +440,7 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_CustomIdElements_CustomIdFormats_CustomIdFormatId",
                         column: x => x.CustomIdFormatId,
+                        principalSchema: "public",
                         principalTable: "CustomIdFormats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -409,6 +448,7 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Likes",
+                schema: "public",
                 columns: table => new
                 {
                     ItemId = table.Column<int>(type: "int", nullable: false),
@@ -420,12 +460,14 @@ namespace InventoryApp.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Likes_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "public",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Likes_Items_ItemId",
                         column: x => x.ItemId,
+                        principalSchema: "public",
                         principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -433,11 +475,13 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
+                schema: "public",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
+                schema: "public",
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true,
@@ -445,26 +489,31 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
+                schema: "public",
                 table: "AspNetUserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserLogins_UserId",
+                schema: "public",
                 table: "AspNetUserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
+                schema: "public",
                 table: "AspNetUserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
+                schema: "public",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
+                schema: "public",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
@@ -472,69 +521,82 @@ namespace InventoryApp.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_AuthorId",
+                schema: "public",
                 table: "Comments",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_InventoryId",
+                schema: "public",
                 table: "Comments",
                 column: "InventoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomIdElements_CustomIdFormatId",
+                schema: "public",
                 table: "CustomIdElements",
                 column: "CustomIdFormatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomIdFormats_InventoryId",
+                schema: "public",
                 table: "CustomIdFormats",
                 column: "InventoryId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inventories_CategoryId",
+                schema: "public",
                 table: "Inventories",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inventories_OwnerId",
+                schema: "public",
                 table: "Inventories",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryAccesses_UserId",
+                schema: "public",
                 table: "InventoryAccesses",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryFields_InventoryId_Type_SlotIndex",
+                schema: "public",
                 table: "InventoryFields",
                 columns: new[] { "InventoryId", "Type", "SlotIndex" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryTags_TagId",
+                schema: "public",
                 table: "InventoryTags",
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_CreatedById",
+                schema: "public",
                 table: "Items",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_InventoryId_CustomId",
+                schema: "public",
                 table: "Items",
                 columns: new[] { "InventoryId", "CustomId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_UserId",
+                schema: "public",
                 table: "Likes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_Name",
+                schema: "public",
                 table: "Tags",
                 column: "Name",
                 unique: true);
@@ -544,58 +606,76 @@ namespace InventoryApp.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "AspNetRoleClaims",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+                name: "AspNetUserClaims",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+                name: "AspNetUserLogins",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+                name: "AspNetUserRoles",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                name: "AspNetUserTokens",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "Comments",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "CustomIdElements");
+                name: "CustomIdElements",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "InventoryAccesses");
+                name: "InventoryAccesses",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "InventoryFields");
+                name: "InventoryFields",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "InventoryTags");
+                name: "InventoryTags",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Likes");
+                name: "Likes",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "AspNetRoles",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "CustomIdFormats");
+                name: "CustomIdFormats",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Tags",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "Items",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Inventories");
+                name: "Inventories",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetUsers",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Categories",
+                schema: "public");
         }
     }
 }
