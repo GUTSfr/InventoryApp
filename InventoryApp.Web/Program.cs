@@ -4,7 +4,6 @@ using InventoryApp.Infrastructure.Data;
 using InventoryApp.Web.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +17,10 @@ builder.Services.AddAntiforgery(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseNpgsql(ConvertPostgresUrl(Environment.GetEnvironmentVariable("DATABASE_URL")) ?? builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(ConvertPostgresUrl(Environment.GetEnvironmentVariable("DATABASE_URL"))
+        ?? builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
@@ -35,8 +37,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
     options.AccessDeniedPath = "/Account/Login";
 });
-
-
 
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
@@ -66,13 +66,12 @@ app.UseMiddleware<BlockedUserMiddleware>();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
-}
-using (var scope = app.Services.CreateScope())
-{
+
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
@@ -83,6 +82,9 @@ using (var scope = app.Services.CreateScope())
     if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, "Admin"))
         await userManager.AddToRoleAsync(adminUser, "Admin");
 }
+
+app.Run();
+
 static string? ConvertPostgresUrl(string? url)
 {
     if (string.IsNullOrEmpty(url)) return null;
@@ -90,5 +92,3 @@ static string? ConvertPostgresUrl(string? url)
     var userInfo = uri.UserInfo.Split(':');
     return $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
 }
-
-app.Run();
