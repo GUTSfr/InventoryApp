@@ -20,9 +20,15 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Like> Likes => Set<Like>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+    }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.HasDefaultSchema("public");
 
         builder.Entity<InventoryTag>()
             .HasKey(it => new { it.InventoryId, it.TagId });
