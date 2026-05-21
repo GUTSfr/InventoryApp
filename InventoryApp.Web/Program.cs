@@ -18,7 +18,7 @@ builder.Services.AddAntiforgery(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("DefaultConnection"))); builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+options.UseNpgsql(ConvertPostgresUrl(Environment.GetEnvironmentVariable("DATABASE_URL")) ?? builder.Configuration.GetConnectionString("DefaultConnection")));
 {
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
@@ -82,6 +82,13 @@ using (var scope = app.Services.CreateScope())
     var adminUser = await userManager.FindByEmailAsync("test1@gmail.com");
     if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, "Admin"))
         await userManager.AddToRoleAsync(adminUser, "Admin");
+}
+static string? ConvertPostgresUrl(string? url)
+{
+    if (string.IsNullOrEmpty(url)) return null;
+    var uri = new Uri(url);
+    var userInfo = uri.UserInfo.Split(':');
+    return $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
 }
 
 app.Run();
