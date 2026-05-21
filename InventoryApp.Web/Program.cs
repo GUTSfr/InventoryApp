@@ -18,8 +18,7 @@ builder.Services.AddAntiforgery(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("DefaultConnection"))
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL") ?? builder.Configuration.GetConnectionString("DefaultConnection"))); builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
